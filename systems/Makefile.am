@@ -35,6 +35,17 @@ VNC_DIR = vnc
 else
 VNC_DIR =
 endif
-  
 
-SUBDIRS = $(DEVMEM_DIR) $(FBDEV_DIR) $(X11_DIR) $(SDL_DIR) $(OSX_DIR) $(VNC_DIR)
+if PB_CORE
+PB_DIR = pb
+else
+PB_DIR =
+endif
+
+if PBP_CORE
+PBP_DIR = pbp
+else
+PBP_DIR =
+endif
+
+SUBDIRS = $(DEVMEM_DIR) $(FBDEV_DIR) $(X11_DIR) $(SDL_DIR) $(OSX_DIR) $(VNC_DIR) $(PB_DIR) $(PBP_DIR)
