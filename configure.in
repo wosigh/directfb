@@ -600,6 +600,27 @@ fi
 AC_SUBST(OSX_LIBS)
 AM_CONDITIONAL(SDL_CORE, test "$enable_sdl" = "yes")
 
+dnl Test for PB
+AC_ARG_ENABLE(pb,
+  [  --enable-pb              build with PB support [[default=no]]],,
+  enable_sdl=no)
+
+if test "$enable_pb" = "yes"; then
+  PB_CFLAGS=`pkg-config --cflags gtk+-2.0 gdk-2.0 gthread-2.0`
+  PB_LIBS=`pkg-config --libs gtk+-2.0 gdk-2.0 gthread-2.0` 
+fi
+AC_SUBST(PB_CFLAGS)
+AC_SUBST(PB_LIBS)
+
+AM_CONDITIONAL(PB_CORE, test "$enable_pb" = "yes")
+
+dnl Test for PBP
+AC_ARG_ENABLE(pbp,
+  [  --enable-pbp              build with PBP support [[default=no]]],,
+  enable_sdl=no)
+
+AM_CONDITIONAL(PBP_CORE, test "$enable_pbp" = "yes")
+
 dnl Test for VNC
 AC_ARG_ENABLE(vnc,
   [  --enable-vnc              build with VNC support [[default=auto]]],,
@@ -1527,6 +1548,8 @@ systems/x11/Makefile
 systems/osx/Makefile
 systems/sdl/Makefile
 systems/vnc/Makefile
+systems/pb/Makefile
+systems/pbp/Makefile
 
 wm/Makefile
 wm/default/Makefile
@@ -1642,6 +1665,8 @@ Building System Modules:
   OSX support               $enable_osx                 $OSX_CFLAGS    $OSX_LIBS
   SDL support               $enable_sdl                 $SDL_CFLAGS    $SDL_LIBS
   VNC support               $enable_vnc                 $VNC_CFLAGS    $VNC_LIBS
+  PB  support               $enable_pb                  $PB_CFLAGS     $PB_LIBS
+  PBP support               $enable_pbp
 
 Building Window Manager Modules:
   Default                   yes
