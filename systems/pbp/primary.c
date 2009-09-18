@@ -213,17 +213,6 @@ static void PluginEventListener(DirectThread *thread, void *arg)
 	
 }
 
-/*static void ScreenUpdateLoop( DirectThread *thread, void *arg )
-{
-	gdk_threads_enter();
-
-//	gtk_init(NULL, NULL);
-
-	
-
-	gtk_main();
-	gdk_threads_leave();
-}*/
 
 static int
 primaryLayerDataSize( void )
@@ -236,14 +225,6 @@ primaryRegionDataSize( void )
 {
      return 0;
 }
-
-/*static gboolean
-window_expose_event (GtkWidget      *widget,
-                     GdkEventExpose *event)
-{
- myprintf("expose event GdkWindow ptr =%p\n", widget->window);
-	dfb_pb->container = widget->window;
-}*/
 
 
 static DFBResult
@@ -285,25 +266,7 @@ primaryInitLayer( CoreLayer                  *layer,
      else
           config->pixelformat = DSPF_ARGB;
 
-	/*dfb_pb->container = NULL;
-	g_thread_init(NULL);
-	gdk_threads_init();
-	gdk_threads_enter();
 
-	gtk_init(NULL, NULL);
-	
-	GtkWidget *desktop = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-	gtk_window_set_default_size((GtkWindow*)desktop, 320, 480);
-	//dfb_pb->container = desktop->window;
-	g_signal_connect(desktop, "expose-event",
-                          G_CALLBACK (window_expose_event), NULL);
-
-	gtk_widget_show_all(desktop);
-	
-	gdk_threads_leave();
-
-
-	 direct_thread_create( DTT_OUTPUT, ScreenUpdateLoop, NULL, "Screen Update" );*/
 	 DFBResult ret = pb_primarymemmanager_create(dfb_pb->dfb_primarymem_name, &dfb_pb->primary_mem_mgr);
 	 D_ASSERT(ret == DFB_OK);
 	 	
@@ -464,17 +427,9 @@ update_screen( CoreSurface *surface, int x, int y, int w, int h )
 
      D_ASSERT( surface != NULL );
 	 
-	 //TODO: Draw the dfb surface in GdkWindow(our screen)
-	 //dfb_surface_calc_buffer_size( surface, 8, 0, &pitch, &alloc->size );
-	 //
-	 //if (dfb_pb->container) {
+
 	 CoreSurfaceBufferLock  lock; 
 	 dfb_surface_lock_buffer(surface, CSBR_FRONT, CSAF_GPU_READ, &lock);
-	 
-	 /*GdkPixbuf*     pixbuf = gdk_pixbuf_new_from_data((guchar *)(lock.addr), GDK_COLORSPACE_RGB,
-                                                         TRUE, 8,
-                                                         surface->config.size.w, surface->config.size.h,
-                                                         lock.pitch, NULL, NULL);*/
 
 	 /* send draw event to plugin */
 	 DFBDrawRequest		 draw_request;
@@ -559,18 +514,6 @@ send:
 	 	 pthread_cond_wait(&dfb_pb->drawn_cond, &dfb_pb->draw_mutex);
 
 	 pthread_mutex_unlock(&dfb_pb->draw_mutex);
-	 //wain for the gdkwindow to be created
-     
-	 /*gdk_threads_enter();
-
-	 gdk_draw_pixbuf(dfb_pb->container, NULL, pixbuf,
-					0, 0,
-					0, 0,
-					surface->config.size.w, surface->config.size.h,
-					GDK_RGB_DITHER_NONE, 0, 0);	
-
-	 gdk_threads_leave();											 
-	 }*/
 	 
 	 myprintf("dfb:		leave %s\n", __FUNCTION__);
 	 return DFB_OK;
@@ -586,7 +529,6 @@ typedef enum {
 
 DFBResult
 dfb_pb_set_video_mode_handler( CoreLayerRegionConfig *config )
-//dfb_pb_set_video_mode_handler( int depth, int w, int h )
 {
      /*fusion_skirmish_prevail( &dfb_pb->lock );
 

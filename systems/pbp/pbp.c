@@ -4,15 +4,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/types.h>
+#include <unistd.h>
 
 #include <directfb.h>
 
 #include <fusion/arena.h>
 #include <fusion/shmalloc.h>
-
-/*#include <gtk/gtk.h>
-#include <gdk/gdk.h>
-#include <gdk-pixbuf/gdk-pixbuf.h>*/
 
 #include <core/core.h>
 #include <core/coredefs.h>
@@ -67,15 +65,12 @@ system_initialize( CoreDFB *core, void **data )
           return D_OOSHM();
      }
 
-     
-     /* Initialize PB */
-//	 PB_Init(dfb_pb->container);
-//	 gtk_init(NULL, NULL);
+     pid_t pid = getpid();	 
 
-	 sprintf(dfb_pb->plugin_socket_name, "/tmp/shm/dfbadapter-plugin");
-	 sprintf(dfb_pb->dfb_socket_name, "/tmp/shm/dfbadapter-dfb");
-	 sprintf(dfb_pb->dfb_primarymem_name, "/tmp/shm/dfbadapter.mem");
-	 sprintf(dfb_pb->input_fifo_name, "/tmp/shm/dfbadapter-input");
+	 sprintf(dfb_pb->plugin_socket_name, "/tmp/shm/dfbadapter-plugin.%d", pid);
+	 sprintf(dfb_pb->dfb_socket_name, "/tmp/shm/dfbadapter-dfb.%d", pid);
+	 sprintf(dfb_pb->dfb_primarymem_name, "/tmp/shm/dfbadapter.mem.%d", pid);
+	 sprintf(dfb_pb->input_fifo_name, "/tmp/shm/dfbadapter-input.%d", pid);
 
      fusion_skirmish_init( &dfb_pb->lock, "PBP System", dfb_core_world(core) );
 
